@@ -1,0 +1,504 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package Formularios;
+
+import Clases.ConnectionDB;
+import Clases.Encriptacion;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
+/**
+ *
+ * @author Geydi
+ */
+public class GestionLibros extends javax.swing.JFrame {
+
+    /**
+     * Creates new form FormularioCliente
+     */
+    JFrame frame1;
+    public ConnectionDB myConnDB;
+
+    String nombre;
+    String apellido;
+    String nombreRol;
+    String usuarioCorreoBD;
+    String telef;
+    String ciudad;
+    String pais;  
+    String idUsuarioBD;
+    
+    int idUsuarioLogueado;
+    String usuarioCorreoLogueado;
+    int rolUsuarioLogueado;
+    
+    String nombreDeLibro; 
+    String Autor;
+    String Edicion;
+    String Anno; 
+    String nombreBiblioteca;
+    String direccionBiblioteca;
+    String idLibro;
+    int idLibroSeleccionado;
+    
+    
+    
+    public GestionLibros(int p_idUsuario, int p_rolUsuario, String p_UsuarioCorreo) {
+        initComponents();
+        
+        idUsuarioLogueado = p_idUsuario;
+        usuarioCorreoLogueado = p_UsuarioCorreo;
+        rolUsuarioLogueado = p_rolUsuario;
+        
+        jl_usuario.setText(p_UsuarioCorreo);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setSize(screenSize.width, screenSize.height);
+        this.setTitle("GESTION DE LIBROS");
+        
+        myConnDB = new ConnectionDB ("usuario_libreria","Libreria2024","gestion_libros"); //usuario, contraseña, BD
+       
+        try {
+            showTableData();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestionLibros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+         //bloquear la edición de las filas
+        jTable2.setDefaultEditor(Object.class, null);
+        
+        jOptionPane1.setVisible(false);
+        
+       
+      // esconder la columna 0
+      // jTable2.getColumnModel().getColumn(0).setWidth(0);
+      // jTable2.getColumnModel().getColumn(0).setMinWidth(0);
+      // jTable2.getColumnModel().getColumn(0).setMaxWidth(0);
+        
+    }
+    
+    public void showTableData() throws SQLException
+    {
+        try {
+                DefaultTableModel tblModel2 = (DefaultTableModel)jTable2.getModel();
+                tblModel2.setRowCount(0);
+            
+                frame1 = new JFrame("Database Search Result");
+                frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame1.setLayout(new BorderLayout());
+
+                jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                jTable2.setFillsViewportHeight(true);
+
+                 myConnDB.connect();
+                 ResultSet listaLibros = myConnDB.query("SELECT libros.idLibros, libros.Nombre, libros.Autor, libros.Edicion, libros.Anno, biblioteca.NombreBibliot, biblioteca.Direccion FROM libros LEFT JOIN biblioteca ON biblioteca.idBiblioteca=libros.UbicBiblioteca WHERE libros.Stock >0");
+                 while(listaLibros.next())
+                    {
+                        idLibro = String.valueOf(listaLibros.getInt("libros.idLibros"));
+                        nombreDeLibro = listaLibros.getString("libros.Nombre");
+                        Autor =  listaLibros.getString("libros.Autor");
+                        Edicion = String.valueOf(listaLibros.getInt("libros.Edicion"));
+                        Anno = String.valueOf(listaLibros.getInt("libros.Anno"));
+                        nombreBiblioteca = listaLibros.getString("biblioteca.NombreBibliot");
+                        direccionBiblioteca = listaLibros.getString("biblioteca.Direccion");
+
+                        String tbData [] = {idLibro, nombreDeLibro, Autor, Edicion, Anno, nombreBiblioteca, direccionBiblioteca};
+
+                        DefaultTableModel tblModel = (DefaultTableModel)jTable2.getModel();
+
+                        tblModel.addRow(tbData);
+                        //tblModel.isCellEditable(false);
+                    }
+
+                 myConnDB.disconnect();
+            } catch (Exception e) {
+            }
+
+     
+    }
+    
+    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenu3 = new javax.swing.JMenu();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jl_usuario = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jOptionPane1 = new javax.swing.JOptionPane();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+
+        jMenu3.setText("jMenu3");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+
+        jLabel2.setText("Bienvenido:");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 102, 51), 5));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 102, 51));
+        jLabel1.setText("LISTA DE LIBROS");
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "idLibro", "Nombre del Libro", "Autor", "Edición", "Año", "Biblioteca", "Ubicación de Biblioteca"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+
+        jTextField1.setToolTipText("Filtro");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Buscar:");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(480, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(515, 515, 515))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
+
+        jButton1.setText("Eliminar Libro");
+        jButton1.setActionCommand("");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Cancelar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Modificar Libro");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Alta Libro");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 1204, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(491, 491, 491)
+                                .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(134, 134, 134)
+                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jOptionPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(54, 54, 54))))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        try {
+            // TODO add your handling code here:
+            //this.setEnabled(true);
+            showTableData();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestionLibros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // eliminar usuario seleccionado
+        
+        int filaSeleccionada = jTable2.getSelectedRow();
+        if(filaSeleccionada != -1){
+           
+            int idLibroSeleccionado = Integer.valueOf(jTable2.getModel().getValueAt(filaSeleccionada, 0).toString()); //columna 0
+            eliminarLibro(idLibroSeleccionado);
+
+       }
+       else
+       {
+             jOptionPane1.showMessageDialog(null, "Debe seleccionar antes un libro!");
+       }
+         
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+   private void eliminarLibro(int idLibroEliminar){
+       
+       try {
+                    //conecto con BD
+                    myConnDB.connect();
+                    
+                    //eliminar regirstros relacionados con el libro
+                    String query1 =               
+                        "DELETE FROM reservalibro " +
+                        " WHERE idLibroReserva = " + idLibroEliminar;  
+                    int eliminacionReservaLibro = myConnDB.updateQuery(query1);
+                    
+
+                    //eliminar prestamos de libro
+                    String query2 =               
+                        "DELETE FROM prestamos " +
+                        " WHERE idLibros = " + idLibroEliminar;        
+                    int eliminacionPrestamoLibro = myConnDB.updateQuery(query2);
+
+                    
+                    //eliminar libro
+                    String query3 =               
+                        "DELETE FROM libros " +
+                        " WHERE idLibros = " + idLibroEliminar;        
+                    int eliminacionLibro = myConnDB.updateQuery(query3);
+
+                    //desconecto con BD
+                    myConnDB.disconnect();
+
+                    jOptionPane1.showMessageDialog(null, "Se ha eliminado correctamente el libro!");
+                    
+                    showTableData();
+                                       
+            } catch (SQLException e) {
+               // throw new Exception("");
+                jOptionPane1.showMessageDialog(null, "Ha ocurrido un error al eliminar el libro!");
+            }
+    }
+    
+   
+    
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        FormularioAdministrador fa = new FormularioAdministrador(idUsuarioLogueado, rolUsuarioLogueado, usuarioCorreoLogueado);
+        
+        this.setVisible(false);
+        fa.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        
+        int filaSeleccionada = jTable2.getSelectedRow();
+        if(filaSeleccionada != -1){
+           
+            idLibroSeleccionado = Integer.valueOf(jTable2.getModel().getValueAt(filaSeleccionada, 0).toString()); //columna 0
+            // String rolUsuarioSeleccionado = jTable2.getModel().getValueAt(filaSeleccionada, 4).toString(); //columna 4
+            //elimiarUsuario(idUsuarioSeleccionado);
+             ModificarLibro ml = new ModificarLibro(idLibroSeleccionado,idUsuarioLogueado,rolUsuarioLogueado,usuarioCorreoLogueado);
+             ml.setVisible(true);
+             //this.setVisible(false);
+            
+       }
+       else
+       {
+             jOptionPane1.showMessageDialog(null, "Debe seleccionar antes un usuario!");
+       }
+        
+       
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        RegistroNuevoLibro rnl = new RegistroNuevoLibro(idUsuarioLogueado,rolUsuarioLogueado,usuarioCorreoLogueado);
+        rnl.setVisible(true);
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(((DefaultTableModel) jTable2.getModel()));
+        sorter.setRowFilter(RowFilter.regexFilter(jTextField1.getText()));
+        jTable2.setRowSorter(sorter);
+
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(FormularioCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(FormularioCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(FormularioCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(FormularioCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new FormularioCliente().setVisible(true);
+//            }
+//        });
+//    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JOptionPane jOptionPane1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel jl_usuario;
+    // End of variables declaration//GEN-END:variables
+}
