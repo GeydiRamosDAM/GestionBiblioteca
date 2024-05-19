@@ -312,7 +312,7 @@ public class RegistroNuevoUsuario extends javax.swing.JFrame {
                     "VALUES ( '" +        
                     nombre.toString() + "', '" +
                     apellidos.toString() + "', '" + 
-                    "2" +
+                    "2" + "', '" + 
                     correo_usuario.toString() + "', '" +
                     contrasennaEncriptada.toString() + "', '" +
                     telefono.toString() + "', '"  +
